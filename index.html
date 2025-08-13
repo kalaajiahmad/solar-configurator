@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Solar Sizing Configurator — Pro</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="inner">
+      <div class="brand">
+        <div class="logo"></div><span>Solar Sizing Configurator</span>
+      </div>
+      <div class="minis" id="miniKPIs">
+        <div class="mini"><small>PV</small><b id="miniPV">–</b><small>kW</small></div>
+        <div class="mini"><small>Battery</small><b id="miniBATT">–</b><small>kWh</small></div>
+        <div class="mini"><small>Load</small><b id="miniLOAD">–</b><small>kW</small></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="container">
+    <h1>⚡ Solar Sizing Configurator</h1>
+    <div class="small">Mobile-friendly. Offline. Share via preset link.</div>
+    <div class="hr"></div>
+
+    <div class="grid">
+      <!-- Inputs -->
+      <div class="card">
+        <h2>Inputs</h2>
+        <div class="inputs" id="inputs">
+          <div class="subhead">Load & Sun</div>
+          <label>AC Voltage (V)<input inputmode="decimal" type="number" id="acV" value="230" min="100" max="280" step="1"></label>
+          <label>Day Load Current (A)<input inputmode="decimal" type="number" id="acADay" value="10" min="0" step="0.1"></label>
+          <label>Night Load Current (A)<input inputmode="decimal" type="number" id="acANight" value="10" min="0" step="0.1"></label>
+          <label>Daylight Start (h)<input inputmode="numeric" type="number" id="sunStart" value="6" min="0" max="23" step="1"></label>
+          <label>Daylight End (h)<input inputmode="numeric" type="number" id="sunEnd" value="17" min="0" max="23" step="1"></label>
+          <label>Peak Sun Hours (PSH)<input inputmode="decimal" type="number" id="psh" value="5.5" min="0" step="0.1"></label>
+          <label>System Derate<input inputmode="decimal" type="number" id="derate" value="0.75" min="0.5" max="0.95" step="0.01"></label>
+
+          <div class="subhead">Efficiencies & Autonomy</div>
+          <label>Inverter/Charger Efficiency<input inputmode="decimal" type="number" id="invEff" value="0.92" min="0.5" max="1" step="0.01"></label>
+          <label>Battery Round-Trip Eff.<input inputmode="decimal" type="number" id="rtEff" value="0.85" min="0.5" max="1" step="0.01"></label>
+          <label>Battery DoD (usable)<input inputmode="decimal" type="number" id="dod" value="0.5" min="0.2" max="0.9" step="0.01"></label>
+          <label>Nights of Autonomy<input inputmode="numeric" type="number" id="nAut" value="3" min="0" max="10" step="1"></label>
+          <label>Simulated Days (SOC chart)<input inputmode="numeric" type="number" id="simDays" value="3" min="1" max="14" step="1"></label>
+          <label class="switch">Cap PV at existing 5.6 kW<input type="checkbox" id="useExistingPv" checked></label>
+
+          <div class="subhead">Battery Configuration</div>
+          <label>Cells in Series (S)<input inputmode="numeric" type="number" id="batS" value="4" min="1" max="48" step="1"></label>
+          <label>Strings in Parallel (P)<input inputmode="numeric" type="number" id="batP" value="4" min="1" max="64" step="1"></label>
+          <label>Cell Voltage (V)<input inputmode="decimal" type="number" id="cellV" value="12" min="1" max="60" step="0.1"></label>
+          <label>Cell Capacity (Ah)<input inputmode="decimal" type="number" id="cellAh" value="200" min="1" max="5000" step="1"></label>
+
+          <div class="subhead">Electrical Limits (C-rates)</div>
+          <label>Max Charge C-rate (C)<input inputmode="decimal" type="number" id="cCharge" value="0.2" min="0.05" max="2" step="0.05"></label>
+          <label>Max Discharge C-rate (C)<input inputmode="decimal" type="number" id="cDischarge" value="0.5" min="0.1" max="5" step="0.1"></label>
+
+          <div class="subhead">Grid Assist (Night)</div>
+          <label class="switch">Grid available at night?<input type="checkbox" id="gridOn" checked></label>
+          <label>Grid Window Start (h)<input inputmode="numeric" type="number" id="gridStart" value="17" min="0" max="23" step="1"></label>
+          <label>Grid Window End (h)<input inputmode="numeric" type="number" id="gridEnd" value="6" min="0" max="23" step="1"></label>
+          <label>Max Grid Power (AC kW)<input inputmode="decimal" type="number" id="gridMaxKw" value="3.0" min="0" max="30" step="0.1"></label>
+        </div>
+
+        <div class="row" style="margin-top:10px">
+          <button class="btn primary" id="btnAhmad">Load Ahmad’s System</button>
+          <button class="btn ghost" id="btnReset">Reset</button>
+          <button class="btn ghost" id="btnShare">Copy share link</button>
+          <button class="btn ghost" id="btnExport">Export report</button>
+          <span id="shareTag" class="tag small" style="display:none">Link copied</span>
+        </div>
+        <div class="notice" style="margin-top:12px">
+          <b>Notes:</b> DoD≈50% is healthy for VRLA Gel. Grid assist covers night load first; surplus (up to limit) charges the bank.
+        </div>
+      </div>
+
+      <!-- Outputs -->
+      <div class="card">
+        <h2>Key Outputs</h2>
+        <div class="row">
+          <div class="kpi"><h3>Day Load</h3><div class="v" id="kLoadDay">–</div><div class="small">kW</div></div>
+          <div class="kpi"><h3>Night Load</h3><div class="v" id="kLoadNight">–</div><div class="small">kW</div></div>
+          <div class="kpi"><h3>Daily AC Energy</h3><div class="v" id="kDailyAC">–</div><div class="small">kWh/day</div></div>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <div class="kpi"><h3>PV Required (off-grid)</h3><div class="v" id="kPVOff">–</div><div class="small">kW</div></div>
+          <div class="kpi"><h3>PV Required (with grid)</h3><div class="v" id="kPVWith">–</div><div class="small">kW</div></div>
+          <div class="kpi"><h3>Battery for 3 Nights</h3><div class="v" id="kBatt3">–</div><div class="small">kWh nominal</div></div>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <div class="kpi"><h3>Configured Bank (Nom.)</h3><div class="v" id="kBattNom">–</div><div class="small">kWh</div></div>
+          <div class="kpi"><h3>Usable @ DoD</h3><div class="v" id="kBattUse">–</div><div class="small">kWh</div></div>
+          <div class="kpi"><h3>PV Cap</h3><div class="v" id="kPVExist">5.6</div><div class="small">kW</div></div>
+        </div>
+        <div class="hr"></div>
+        <div class="row">
+          <div class="tag" id="tagCharge">Charge limit: <b id="chgMax">–</b> kW</div>
+          <div class="tag" id="tagDischarge">Discharge limit: <b id="dsgMax">–</b> kW</div>
+          <div class="tag" id="tagViol" style="display:none"><b id="violTxt">No violations</b></div>
+        </div>
+        <div class="hr"></div>
+        <div class="small" id="bankSummary">Battery bank summary here.</div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="section" style="margin-top:16px">
+      <div class="card canvas-card">
+        <h2>Daily Energy Balance</h2>
+        <canvas id="barChart" aria-label="Daily energy balance bar chart" role="img"></canvas>
+      </div>
+      <div class="card canvas-card">
+        <h2>Battery State of Charge (SOC)</h2>
+        <canvas id="socChart" aria-label="Battery state of charge over time" role="img"></canvas>
+      </div>
+    </div>
+
+    <div class="footer small">
+      Inverter: LS-60248-W100 (6 kW). Default PV cap 5.6 kW. Tip: Add to Home Screen for a native-like shortcut.
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+:root{
+  --bg:#0f1115; --card:#151922; --muted:#8a93a6; --txt:#eaf0ff; --acc:#33d6a6;
+  --warn:#ffcc66; --bad:#ff6b6b; --good:#7cd992; --grid:#23293a; --shadow:0 10px 30px #00000045;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:linear-gradient(180deg,#0d0f14,#0f1115 30%,#0f1115);color:var(--txt);
+  font:16px/1.45 Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale
+}
+.container{max-width:1200px;margin:72px auto 24px;padding:0 16px}
+h1{font-size:26px;margin:8px 0 4px}
+h2{font-size:18px;margin:0 0 8px;color:#c9d3f5}
+.small{font-size:12px;color:var(--muted)}
+.card{background:var(--card);border:1px solid #1b2030;border-radius:16px;padding:14px;box-shadow:var(--shadow)}
+.grid{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+@media (max-width: 768px){.grid{grid-template-columns:1fr}}
+.inputs{display:grid;grid-template-columns:repeat(2,minmax(200px,1fr));gap:12px}
+@media (max-width: 520px){.inputs{grid-template-columns:1fr}}
+.inputs label{display:flex;flex-direction:column;gap:6px;font-weight:650}
+.inputs input[type="number"], .inputs select{
+  background:#0c0f16;border:1px solid #232a3d;color:var(--txt);padding:14px 12px;border-radius:12px;outline:none;
+  font-size:16px;appearance:none
+}
+.inputs input[type="number"]::-webkit-outer-spin-button,.inputs input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.subhead{grid-column:1/-1;margin-top:4px;margin-bottom:-4px;color:#9fb2d7;font-weight:800;letter-spacing:.2px}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.kpi{flex:1 1 200px;background:#0e1320;border:1px solid #1d2334;border-radius:14px;padding:12px}
+.kpi h3{margin:0 0 6px;font-size:13px;color:#b7c4fd}
+.kpi .v{font-size:20px;font-weight:800}
+.bad{color:var(--bad)} .ok{color:var(--good)} .warn{color:var(--warn)}
+.tag{display:inline-flex;gap:8px;align-items:center;background:#101828;border:1px solid #1f2a3f;border-radius:999px;padding:6px 10px}
+.btn{appearance:none;border:0;padding:14px 16px;border-radius:14px;background:#243049;color:#eaf0ff;font-weight:800;cursor:pointer;font-size:15px}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:linear-gradient(135deg,#2bdc8c,#34d6ff 120%);color:#08121a}
+.btn.ghost{background:transparent;border:1px solid #293450}
+.section{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width: 900px){.section{grid-template-columns:1fr}}
+.canvas-card{padding:12px}
+canvas{width:100%;height:360px;background:linear-gradient(180deg,#0e1320,#0b0f19);border:1px solid #1b2233;border-radius:12px}
+@media (max-width: 520px){canvas{height:300px}}
+.hr{height:1px;background:linear-gradient(90deg,transparent,#2b3247,transparent);margin:14px 0}
+.footer{opacity:.7;margin-top:18px}
+.notice{padding:10px 12px;border:1px dashed #3a4666;border-radius:12px;background:#101522;color:#b5c3ff}
+.switch{display:flex;align-items:center;gap:10px;padding:14px 12px;border:1px solid #232a3d;border-radius:12px;background:#0c0f16}
+.switch input{width:22px;height:22px}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:99;background:rgba(16,20,32,0.86);backdrop-filter: blur(8px);border-bottom:1px solid #1b2030}
+.topbar .inner{max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px}
+.brand .logo{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#34d6ff,#2bdc8c);box-shadow:0 4px 14px #00000055}
+.brand span{font-weight:900;letter-spacing:0.3px}
+.minis{display:flex;gap:8px;flex-wrap:wrap}
+.mini{background:#0e1320;border:1px solid #1d2334;border-radius:12px;padding:6px 10px;display:flex;gap:8px;align-items:baseline}
+.mini b{font-size:16px}
+.mini small{color:#9fb2d7}
+.copy-ok{border-color:#2bdc8c}
+
+/* Print styles for exported report (the report file also embeds its own CSS, but keeping this for completeness if someone prints main page) */
+@media print {
+  body { background: white; color: #000; }
+  .topbar, .btn, .switch, .notice { display: none !important; }
+  .card { box-shadow: none; border-color: #ddd; }
+  canvas { border: 1px solid #ddd; }
+}
