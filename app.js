@@ -1,3 +1,11 @@
+// ===== Config =====
+const CONFIG = {
+  // If you set this to your GitHub Pages URL, share links will point there even when testing locally.
+  // Example: 'https://ahmad-username.github.io/solar-configurator/'
+  SHARE_BASE_URL: 'https://kalaajiahmad.github.io/solar-configurator/'
+};
+
+
 // ===== Utilities =====
 const el = id => document.getElementById(id);
 const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
@@ -244,15 +252,42 @@ el('btnAhmad').addEventListener('click', ()=>{
   recalc();
 });
 
+// // Share preset link
+// el('btnShare').addEventListener('click', async ()=>{
+//   const q = {...state, useExistingPv: state.useExistingPv?1:0, gridOn: state.gridOn?1:0};
+//   const url = location.origin + location.pathname + '?' + qsBuild(q);
+//   try{
+//     await navigator.clipboard.writeText(url);
+//     const tag = el('shareTag'); tag.style.display='inline-flex'; tag.classList.add('copy-ok');
+//     setTimeout(()=>{ tag.style.display='none'; tag.classList.remove('copy-ok');}, 1200);
+//   }catch(e){
+//     prompt('Copy this URL:', url);
+//   }
+// });
 // Share preset link
 el('btnShare').addEventListener('click', async ()=>{
   const q = {...state, useExistingPv: state.useExistingPv?1:0, gridOn: state.gridOn?1:0};
-  const url = location.origin + location.pathname + '?' + qsBuild(q);
-  try{
+
+  // Prefer configured base URL. Else, derive from current location.
+  // Remove query string and any trailing "index.html" to get a clean base.
+  let base;
+  if (CONFIG.SHARE_BASE_URL && CONFIG.SHARE_BASE_URL.trim() !== '') {
+    base = CONFIG.SHARE_BASE_URL.replace(/index\.html?$/,'');
+    if (!base.endsWith('/')) base += '/';
+  } else {
+    const urlObj = new URL(window.location.href);
+    urlObj.search = '';
+    // strip "index.html" for tidy paths on GitHub Pages
+    urlObj.pathname = urlObj.pathname.replace(/index\.html?$/,'');
+    base = urlObj.toString();
+  }
+
+  const url = base + '?' + qsBuild(q);
+  try {
     await navigator.clipboard.writeText(url);
     const tag = el('shareTag'); tag.style.display='inline-flex'; tag.classList.add('copy-ok');
     setTimeout(()=>{ tag.style.display='none'; tag.classList.remove('copy-ok');}, 1200);
-  }catch(e){
+  } catch (e) {
     prompt('Copy this URL:', url);
   }
 });
